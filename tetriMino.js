@@ -39,10 +39,39 @@ class tetriMino {
         ctx.fillRect((x-1)*boxWH, (y-1)*boxWH, boxWH, boxWH);
     }
     
+    //単位要素消去
+    clearBox(x,y){
+        ctx.clearRect((x-1)*boxWH, (y-1)*boxWH, boxWH, boxWH);
+        ctx.beginPath();
+    }
+    
     //テトリミノ描画
     drawMino(){
         for (var i = 1; i <= 4; i++){
             this.drawBox(this.minoPos[i-1][0],this.minoPos[i-1][1]);
         }
+    }
+    
+    //テトリミノ消去
+    clearMino(){
+        for (var i = 1; i <= 4; i++){
+            this.clearBox(this.minoPos[i-1][0],this.minoPos[i-1][1]);
+        }
+    }
+    
+    
+    //テトリミノ移動
+    moveMino(x,y){
+        this.clearMino();
+        for (var i = 1; i <=4; i++){
+            this.minoPos[i-1][0] += x;
+            this.minoPos[i-1][1] += y;
+        }
+        this.drawMino();
+    }
+    
+    //テトリミノ落下
+    fallMino(){
+        this.moveMino(0, 1);
     }
 }
