@@ -41,7 +41,7 @@ class tetriMino {
     
     //データ0→1
     drawData(x,y){
-        canvasData[y-1][x-1] = 1;
+        canvasData[y-1][x] = 1;
     }
     
     
@@ -52,50 +52,51 @@ class tetriMino {
     
     //データ1→0
     clearData(x,y){
-        canvasData[y-1][x-1] = 0;
+        canvasData[y-1][x] = 0;
     }
     
-    //テトリミノ描画
+    //ミノ描画
     drawMino(){
         for (var i = 1; i <= 4; i++){
             this.drawBox(this.minoPos[i-1][0],this.minoPos[i-1][1]);
         }
     }
     
-    //テトリミノ消去
+    //ミノ消去
     clearMino(){
         for (var i = 1; i <= 4; i++){
             this.clearBox(this.minoPos[i-1][0],this.minoPos[i-1][1]);
         }
     }
     
-    
-    //テトリミノ移動
-    moveMino(x,y){
-        this.clearMino();
-        for (var i = 1; i <=4; i++){
-            this.minoPos[i-1][0] += x;
-            this.minoPos[i-1][1] += y;
-        }
-        this.drawMino();
-    }
-    
     //移動判定
     judgeMove(x, y){
-        if (canvasData[this.minoPos[0][1]-1+y][this.minoPos[0][0]-1+x] == 1) {
+        if (canvasData[this.minoPos[0][1]+y-1][this.minoPos[0][0]+x] == 1) {
             return false;
-        }else if (canvasData[this.minoPos[1][1]-1+y][this.minoPos[1][0]-1+x] == 1){
+        }else if (canvasData[this.minoPos[1][1]+y-1][this.minoPos[1][0]+x] == 1){
             return false;
-        }else if (canvasData[this.minoPos[2][1]-1+y][this.minoPos[2][0]-1+x] == 1){
+        }else if (canvasData[this.minoPos[2][1]+y-1][this.minoPos[2][0]+x] == 1){
             return false;
-        }else if (canvasData[this.minoPos[3][1]-1+y][this.minoPos[3][0]-1+x] == 1){
+        }else if (canvasData[this.minoPos[3][1]+y-1][this.minoPos[3][0]+x] == 1){
             return false;
         }else{
             return true;
         }
     }
     
-    //テトリミノ落下
+    //ミノ移動
+    moveMino(x,y){
+        if(this.judgeMove(x,y)){
+            this.clearMino();
+            for (var i = 1; i <=4; i++){
+                this.minoPos[i-1][0] += x;
+                this.minoPos[i-1][1] += y;
+            }
+            this.drawMino();
+        }
+    }
+    
+    //ミノ落下
     fallMino(){
         if(!this.judgeMove(0,1)){
             clearInterval(timer);
@@ -104,7 +105,7 @@ class tetriMino {
             }
             main();
         }else{
-            this.moveMino(0, 1);
+            this.moveMino(0,1);
         }
     }
 }
