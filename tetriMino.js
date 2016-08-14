@@ -34,15 +34,25 @@ class tetriMino {
         }
     }
     
-    //単位要素描画
+    //ボックス描画
     drawBox(x,y){
         ctx.fillRect((x-1)*boxWH, (y-1)*boxWH, boxWH, boxWH);
     }
     
-    //単位要素消去
+    //データ0→1
+    drawData(x,y){
+        canvasData[y-1][x-1] = 1;
+    }
+    
+    
+    //ボックス消去
     clearBox(x,y){
         ctx.clearRect((x-1)*boxWH, (y-1)*boxWH, boxWH, boxWH);
-        ctx.beginPath();
+    }
+    
+    //データ1→0
+    clearData(x,y){
+        canvasData[y-1][x-1] = 0;
     }
     
     //テトリミノ描画
@@ -70,8 +80,31 @@ class tetriMino {
         this.drawMino();
     }
     
+    //移動判定
+    judgeMove(x, y){
+        if (canvasData[this.minoPos[0][1]-1+y][this.minoPos[0][0]-1+x] == 1) {
+            return false;
+        }else if (canvasData[this.minoPos[1][1]-1+y][this.minoPos[1][0]-1+x] == 1){
+            return false;
+        }else if (canvasData[this.minoPos[2][1]-1+y][this.minoPos[2][0]-1+x] == 1){
+            return false;
+        }else if (canvasData[this.minoPos[3][1]-1+y][this.minoPos[3][0]-1+x] == 1){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    
     //テトリミノ落下
     fallMino(){
-        this.moveMino(0, 1);
+        if(!this.judgeMove(0,1)){
+            clearInterval(timer);
+            for (var i = 1; i <= 4; i++){
+                this.drawData(this.minoPos[i-1][0],this.minoPos[i-1][1]); //止まったらデータ更新
+            }
+            main();
+        }else{
+            this.moveMino(0, 1);
+        }
     }
 }
