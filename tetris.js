@@ -31,7 +31,6 @@ function main(){
     function fall(){mino.fallMino();}
     timer = setInterval(fall, fallInterval);
 }
-
 main();
 
 //キーボード操作
@@ -45,6 +44,9 @@ case 37:
   break;
 case 40:
   mino.moveMino(0,1); //「↓」で下加速
+  break;
+case 32:
+  mino.rotateMino(); //スペースで回転
   break;
 }
 });

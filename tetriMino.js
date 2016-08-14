@@ -5,7 +5,7 @@ class tetriMino {
         switch (minoType){
           case 1:
             //Iミノ
-            this.minoPos = [[refX, refY], [refX+1, refY], [refX+2, refY], [refX+3, refY]];
+            this.minoPos = [[refX+1, refY], [refX, refY], [refX+2, refY], [refX+3, refY]];
             break;
           case 2:
             //Oミノ
@@ -13,23 +13,23 @@ class tetriMino {
             break;
           case 3:
             //Tミノ
-            this.minoPos = [[refX+1, refY], [refX, refY+1], [refX+1, refY+1], [refX+2, refY+1]];
+            this.minoPos = [[refX+1, refY+1], [refX, refY+1], [refX+1, refY], [refX+2, refY+1]];
             break;
           case 4:
             //Jミノ
-            this.minoPos = [[refX, refY], [refX, refY+1], [refX+1, refY+1], [refX+2, refY+1]];
+            this.minoPos = [[refX+1, refY+1], [refX, refY+1], [refX, refY], [refX+2, refY+1]];
             break;
           case 5:
             //Lミノ
-            this.minoPos = [[refX+2, refY], [refX, refY+1], [refX+1, refY+1], [refX+2, refY+1]];
+            this.minoPos = [[refX+1, refY+1], [refX, refY+1], [refX+2, refY], [refX+2, refY+1]];
             break;
           case 6:
             //Sミノ
-            this.minoPos = [[refX, refY+1], [refX+1, refY+1], [refX+1, refY], [refX+2, refY]];
+            this.minoPos = [[refX+1, refY], [refX+1, refY+1], [refX, refY+1], [refX+2, refY]];
             break;
           case 7:
             //Zミノ
-            this.minoPos = [[refX, refY], [refX+1, refY], [refX+1, refY+1], [refX+2, refY+1]];
+            this.minoPos = [[refX+1, refY], [refX, refY], [refX+1, refY+1], [refX+2, refY+1]];
             break;
         }
     }
@@ -96,7 +96,7 @@ class tetriMino {
         }
     }
     
-    //ミノ落下
+    //ミノ自動落下
     fallMino(){
         if(!this.judgeMove(0,1)){
             clearInterval(timer);
@@ -106,6 +106,77 @@ class tetriMino {
             main();
         }else{
             this.moveMino(0,1);
+        }
+    }
+    
+    //ミノ回転
+    rotateMino(){
+        var boxRelPos = [[this.minoPos[1][0] - this.minoPos[0][0], this.minoPos[1][1] - this.minoPos[0][1]],
+                         [this.minoPos[2][0] - this.minoPos[0][0], this.minoPos[2][1] - this.minoPos[0][1]],
+                         [this.minoPos[3][0] - this.minoPos[0][0], this.minoPos[3][1] - this.minoPos[0][1]]];
+        this.clearMino(); 
+        
+        for (var i = 1; i <= 3; i++){
+            if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([1,0])){
+                boxRelPos[i-1] = [0,-1];
+                this.minoPos[i][0] = (this.minoPos[0][0] + boxRelPos[i-1][0]); 
+                this.minoPos[i][1] = (this.minoPos[0][1] + boxRelPos[i-1][1]);
+            }
+            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([1,-1])){
+                boxRelPos[i-1] = [-1,-1];
+                this.minoPos[i][0] = (this.minoPos[0][0] + boxRelPos[i-1][0]); 
+                this.minoPos[i][1] = (this.minoPos[0][1] + boxRelPos[i-1][1]); 
+            }
+            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([0,-1])){
+                boxRelPos[i-1] = [-1,0];
+                this.minoPos[i][0] = (this.minoPos[0][0] + boxRelPos[i-1][0]); 
+                this.minoPos[i][1] = (this.minoPos[0][1] + boxRelPos[i-1][1]); 
+            }
+            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([-1,-1])){
+                boxRelPos[i-1] = [-1,1];
+                this.minoPos[i][0] = (this.minoPos[0][0] + boxRelPos[i-1][0]); 
+                this.minoPos[i][1] = (this.minoPos[0][1] + boxRelPos[i-1][1]); 
+            }
+            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([-1,0])){
+                boxRelPos[i-1] = [0,1];
+                this.minoPos[i][0] = (this.minoPos[0][0] + boxRelPos[i-1][0]); 
+                this.minoPos[i][1] = (this.minoPos[0][1] + boxRelPos[i-1][1]); 
+            }
+            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([-1,1])){
+                boxRelPos[i-1] = [1,1];
+                this.minoPos[i][0] = (this.minoPos[0][0] + boxRelPos[i-1][0]); 
+                this.minoPos[i][1] = (this.minoPos[0][1] + boxRelPos[i-1][1]); 
+            } 
+            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([0,1])){
+                boxRelPos[i-1] = [1,0];
+                this.minoPos[i][0] = (this.minoPos[0][0] + boxRelPos[i-1][0]); 
+                this.minoPos[i][1] = (this.minoPos[0][1] + boxRelPos[i-1][1]); 
+            }
+            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([1,1])){
+                boxRelPos[i-1] = [1,-1];
+                this.minoPos[i][0] = (this.minoPos[0][0] + boxRelPos[i-1][0]); 
+                this.minoPos[i][1] = (this.minoPos[0][1] + boxRelPos[i-1][1]); 
+            }
+            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([2,0])){
+                boxRelPos[i-1] = [0,-2];
+                this.minoPos[i][0] = (this.minoPos[0][0] + boxRelPos[i-1][0]); 
+                this.minoPos[i][1] = (this.minoPos[0][1] + boxRelPos[i-1][1]); 
+            }
+            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([0,-2])){
+                boxRelPos[i-1] = [-2,0];
+                this.minoPos[i][0] = (this.minoPos[0][0] + boxRelPos[i-1][0]); 
+                this.minoPos[i][1] = (this.minoPos[0][1] + boxRelPos[i-1][1]); 
+            }
+            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([-2,0])){
+                boxRelPos[i-1] = [0,2];
+                this.minoPos[i][0] = (this.minoPos[0][0] + boxRelPos[i-1][0]); 
+                this.minoPos[i][1] = (this.minoPos[0][1] + boxRelPos[i-1][1]); 
+            }
+            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([0,2])){
+                boxRelPos[i-1] = [2,0];
+                this.minoPos[i][0] = (this.minoPos[0][0] + boxRelPos[i-1][0]); 
+                this.minoPos[i][1] = (this.minoPos[0][1] + boxRelPos[i-1][1]); 
+            }
         }
     }
 }
