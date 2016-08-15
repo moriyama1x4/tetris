@@ -140,7 +140,7 @@ class tetriMino {
     
     //ミノ回転
     rotateMino(){
-        var defBoxPos = [this.minoPos[1], this.minoPos[2], this.minoPos[3]]; 
+        var defBoxPos = [this.minoPos[1].concat(), this.minoPos[2].concat(), this.minoPos[3].concat()]; 
         
         //基準ブロックからの相対位置取得
         var boxRelPos = [[this.minoPos[1][0] - this.minoPos[0][0], this.minoPos[1][1] - this.minoPos[0][1]],
@@ -158,10 +158,6 @@ class tetriMino {
                 judgeRotate = false;
             }
         }
-        
-//        console.log(defBoxPos[0]);
-//        console.log(defBoxPos[1]);
-//        console.log(defBoxPos[2]);
         
         this.clearMino(); 
         
@@ -216,10 +212,6 @@ class tetriMino {
                 setRelPos(this.minoPos, i);
             }
         }
-        
-//        console.log(defBoxPos[0]);
-//        console.log(defBoxPos[1]);
-//        console.log(defBoxPos[2]);
         
         //1ブロックでも回転不可のものがあれば元に戻す
         if(!judgeRotate){
