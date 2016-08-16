@@ -71,17 +71,15 @@ class tetriMino {
     
     //移動判定
     judgeMove(x, y){
-        if (canvasData[this.minoPos[0][1]+y][this.minoPos[0][0]+x] == 1) {
-            return false;
-        }else if (canvasData[this.minoPos[1][1]+y][this.minoPos[1][0]+x] == 1){
-            return false;
-        }else if (canvasData[this.minoPos[2][1]+y][this.minoPos[2][0]+x] == 1){
-            return false;
-        }else if (canvasData[this.minoPos[3][1]+y][this.minoPos[3][0]+x] == 1){
-            return false;
-        }else{
-            return true;
+        var judge = true;
+        
+        for(var i = 0; i <= 3; i++){
+            if (canvasData[this.minoPos[i][1]+y][this.minoPos[i][0]+x] == 1) {
+                judge =  false;
+            }
         }
+        
+        return judge;
     }
     
     //ミノ移動
@@ -140,7 +138,7 @@ class tetriMino {
     
     //ミノ回転
     rotateMino(){
-        var defBoxPos = [this.minoPos[1].concat(), this.minoPos[2].concat(), this.minoPos[3].concat()]; 
+        var defBoxPos = [this.minoPos[1].concat(), this.minoPos[2].concat(), this.minoPos[3].concat()]; //デフォルトの絶対位置をキープ
         
         //基準ブロックからの相対位置取得
         var boxRelPos = [[this.minoPos[1][0] - this.minoPos[0][0], this.minoPos[1][1] - this.minoPos[0][1]],
@@ -161,56 +159,10 @@ class tetriMino {
         
         this.clearMino(); 
         
-        //基準ブロックからの相対位置それぞれで回転時の動きを定義
+        //基準ブロックからの相対位置を回転 & 相対　→　絶対変換
         for (var i = 1; i <= 3; i++){
-            if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([1,0])){
-                boxRelPos[i-1] = [0,-1];
-                setRelPos(this.minoPos, i);
-            }
-            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([1,-1])){
-                boxRelPos[i-1] = [-1,-1];
-                setRelPos(this.minoPos, i);
-            }
-            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([0,-1])){
-                boxRelPos[i-1] = [-1,0];
-                setRelPos(this.minoPos, i);
-            }
-            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([-1,-1])){
-                boxRelPos[i-1] = [-1,1];
-                setRelPos(this.minoPos, i);
-            }
-            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([-1,0])){
-                boxRelPos[i-1] = [0,1];
-                setRelPos(this.minoPos, i);
-            }
-            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([-1,1])){
-                boxRelPos[i-1] = [1,1];
-                setRelPos(this.minoPos, i);
-            } 
-            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([0,1])){
-                boxRelPos[i-1] = [1,0];
-                setRelPos(this.minoPos, i);
-            }
-            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([1,1])){
-                boxRelPos[i-1] = [1,-1];
-                setRelPos(this.minoPos, i);
-            }
-            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([2,0])){
-                boxRelPos[i-1] = [0,-2];
-                setRelPos(this.minoPos, i);
-            }
-            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([0,-2])){
-                boxRelPos[i-1] = [-2,0];
-                setRelPos(this.minoPos, i);
-            }
-            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([-2,0])){
-                boxRelPos[i-1] = [0,2];
-                setRelPos(this.minoPos, i);
-            }
-            else if (JSON.stringify(boxRelPos[i-1]) == JSON.stringify([0,2])){
-                boxRelPos[i-1] = [2,0];
-                setRelPos(this.minoPos, i);
-            }
+            boxRelPos[i-1] = [-boxRelPos[i-1][1], boxRelPos[i-1][0]]; // 相対位置π/2回転
+            setRelPos(this.minoPos, i);
         }
         
         //1ブロックでも回転不可のものがあれば元に戻す

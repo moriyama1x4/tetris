@@ -17,18 +17,10 @@ let canvasData = [[1,1,1,1,1,1,1,1,1,1,1,1], [1,0,0,0,0,0,0,0,0,0,0,1], [1,0,0,0
                   [1,0,0,0,0,0,0,0,0,0,0,1], [1,0,0,0,0,0,0,0,0,0,0,1], [1,0,0,0,0,0,0,0,0,0,0,1], [1,0,0,0,0,0,0,0,0,0,0,1], 
                   [1,0,0,0,0,0,0,0,0,0,0,1], [1,1,1,1,1,1,1,1,1,1,1,1]];
 
-// canvasの縦横指定
-(() => {
-    document.getElementById("tetrisCanvas").width = canvasW;
-    document.getElementById("tetrisCanvas").height = canvasH;
-})();
-
 //ミノ生成
 function makeMino(){
     mino = new tetriMino(4, 1, Math.floor( Math.random() * 7 ) + 1);
 }
-
-
 
 //メイン動作
 function main(){
@@ -40,7 +32,6 @@ function main(){
     }
     timer = setInterval(fall, fallInterval); //setInterval(mino.fallMino, fallInteraval)だとうまく動かない
 }
-main();
 
 //キーボード操作
 document.addEventListener('keydown', e => {
@@ -59,3 +50,9 @@ case 32:
   break;
 }
 });
+
+window.onload = function(){
+    document.getElementById("tetrisCanvas").width = canvasW;
+    document.getElementById("tetrisCanvas").height = canvasH;
+    main();
+}
