@@ -1,7 +1,7 @@
 ﻿"use strict";
 
 class tetriMino {
-    constructor(refX, refY, minoType) {
+    constructor(refX, refY, minoType, ctx, canvasData) {
         switch (minoType){
           case 1:
             //Iミノ
@@ -32,16 +32,22 @@ class tetriMino {
             this.minoPos = [[refX+1, refY], [refX, refY], [refX+1, refY+1], [refX+2, refY+1]];
             break;
         }
+        this.minoType = minoType;
+        this.minoColor = ["#67fecc", "#feff3a", "#d363fd", "#2b63b1", "#ff9804", "#65ff34", "#fe3465"];
     }
     
+    
+    
+    
     //ボックス描画
-    drawBox(x,y){
+    drawBox(x,y,color){
+        ctx.fillStyle = color;
         ctx.fillRect((x-1)*boxWH, (y-1)*boxWH, boxWH, boxWH);
     }
     
-    //データ0→1
+    //データ0→n
     drawData(x,y){
-        canvasData[y][x] = 1;
+        canvasData[y][x] = this.minoType;
     }
     
     
@@ -50,7 +56,7 @@ class tetriMino {
         ctx.clearRect((x-1)*boxWH, (y-1)*boxWH, boxWH, boxWH);
     }
     
-    //データ1→0
+    //データn→0
     clearData(x,y){
         canvasData[y][x] = 0;
     }
@@ -58,7 +64,7 @@ class tetriMino {
     //ミノ描画
     drawMino(){
         for (var i = 1; i <= 4; i++){
-            this.drawBox(this.minoPos[i-1][0],this.minoPos[i-1][1]);
+            this.drawBox(this.minoPos[i-1][0], this.minoPos[i-1][1], this.minoColor[this.minoType-1]);
         }
     }
     
@@ -74,7 +80,7 @@ class tetriMino {
         var judge = true;
         
         for(var i = 0; i <= 3; i++){
-            if (canvasData[this.minoPos[i][1]+y][this.minoPos[i][0]+x] == 1) {
+            if (canvasData[this.minoPos[i][1]+y][this.minoPos[i][0]+x] != 0) {
                 judge =  false;
             }
         }
@@ -94,45 +100,37 @@ class tetriMino {
         }
     }
     
-    //列消去 & ずらし
+    //行データ射影
+    projRowData(y){
+        var rowData = [1,0,0,0,0,0,0,0,0,0,0,1];        
+        for(var i = 1; i <= 10; i++){
+            if(canvasData[y][i] != 0){
+                rowData[i] = 1;
+            }
+        }
+        return rowData;
+    }
+    
+    //行消去 & ずらし
     clearRow(y){
-        if(JSON.stringify(canvasData[y]) == JSON.stringify([1,1,1,1,1,1,1,1,1,1,1,1])){
-            //列消去
+        if(JSON.stringify(this.projRowData(y)) == JSON.stringify([1,1,1,1,1,1,1,1,1,1,1,1])){
+            //行消去
             for(var i = 1; i <= 10; i++){
                 this.clearData(i, y);
                 this.clearBox(i, y);
             }
             
-            //列ずらし
+            //行ずらし
             for(var i = y; i >= 2; i--){
                 canvasData[i] = canvasData[i-1];
                 for(var j = 1; j <= 10; j++){
-                    if(canvasData[i][j] == 1){
-                        this.drawBox(j, i);
+                    if(canvasData[i][j] != 0){
+                        this.drawBox(j, i, this.minoColor[canvasData[i][j] - 1]);
                     }else{
                         this.clearBox(j, i);
                     }
                 }
             }
-        }
-    }
-    
-    //ミノ自動落下
-    fallMino(){
-        if(!this.judgeMove(0,1)){
-            clearInterval(timer);
-            for (var i = 1; i <= 4; i++){
-                this.drawData(this.minoPos[i-1][0],this.minoPos[i-1][1]); //止まったらデータ更新
-            }
-            
-            //データ更新後に列消去処理をするため、ループを分ける
-            for (var i = 1; i <= 4; i++){
-                this.clearRow(this.minoPos[i-1][1]);
-            }
-            
-            main();
-        }else{
-            this.moveMino(0,1);
         }
     }
     
@@ -171,7 +169,6 @@ class tetriMino {
                 this.minoPos[i] = defBoxPos[i-1];
             }
         }
-
         this.drawMino();
     }
 }
