@@ -5,14 +5,21 @@
     <title>テトリス</title>
     <script type="text/javascript" src="./tetriMino.js"></script>
     <style type="text/css">
-      #tetrisCanvas {
-        border: solid 1px #000000;
-      }
+        body{
+            width: 500px;
+        }
+        
+        canvas {
+            border: solid 1px #000000;
+            float: left;
+        }
     </style>
 </head>
 
 <body>
     <canvas id="tetrisCanvas" width="0" height="0"></canvas>
+    <canvas id="nextCanvas" width="0" height="0"></canvas>
+    <canvas id="holdCanvas" width="0" height="0"></canvas>
     <script type="text/javascript" src="./tetris.js"></script>
 </body>
 </html>

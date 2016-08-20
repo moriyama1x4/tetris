@@ -9,7 +9,7 @@ class tetriMino {
             break;
           case 2:
             //Oミノ
-            this.minoPos = [[refX, refY], [refX+1, refY], [refX, refY+1], [refX+1, refY+1]];
+            this.minoPos = [[refX+1, refY], [refX+2, refY], [refX+1, refY+1], [refX+2, refY+1]];
             break;
           case 3:
             //Tミノ
@@ -34,6 +34,8 @@ class tetriMino {
         }
         this.minoType = minoType;
         this.minoColor = ["#67fecc", "#feff3a", "#d363fd", "#2b63b1", "#ff9804", "#65ff34", "#fe3465"];
+        this.ctx = ctx;
+        this.canvasData = canvasData;
     }
     
     
@@ -41,24 +43,24 @@ class tetriMino {
     
     //ボックス描画
     drawBox(x,y,color){
-        ctx.fillStyle = color;
-        ctx.fillRect((x-1)*boxWH, (y-1)*boxWH, boxWH, boxWH);
+        this.ctx.fillStyle = color;
+        this.ctx.fillRect((x-1)*boxWH, (y-1)*boxWH, boxWH, boxWH);
     }
     
     //データ0→n
     drawData(x,y){
-        canvasData[y][x] = this.minoType;
+        this.canvasData[y][x] = this.minoType;
     }
     
     
     //ボックス消去
     clearBox(x,y){
-        ctx.clearRect((x-1)*boxWH, (y-1)*boxWH, boxWH, boxWH);
+        this.ctx.clearRect((x-1)*boxWH, (y-1)*boxWH, boxWH, boxWH);
     }
     
     //データn→0
     clearData(x,y){
-        canvasData[y][x] = 0;
+        this.canvasData[y][x] = 0;
     }
     
     //ミノ描画
@@ -80,7 +82,7 @@ class tetriMino {
         var judge = true;
         
         for(var i = 0; i <= 3; i++){
-            if (canvasData[this.minoPos[i][1]+y][this.minoPos[i][0]+x] != 0) {
+            if (this.canvasData[this.minoPos[i][1]+y][this.minoPos[i][0]+x] != 0) {
                 judge =  false;
             }
         }
@@ -104,7 +106,7 @@ class tetriMino {
     projRowData(y){
         var rowData = [1,0,0,0,0,0,0,0,0,0,0,1];        
         for(var i = 1; i <= 10; i++){
-            if(canvasData[y][i] != 0){
+            if(this.canvasData[y][i] != 0){
                 rowData[i] = 1;
             }
         }
@@ -122,10 +124,10 @@ class tetriMino {
             
             //行ずらし
             for(var i = y; i >= 2; i--){
-                canvasData[i] = canvasData[i-1];
+                this.canvasData[i] = this.canvasData[i-1];
                 for(var j = 1; j <= 10; j++){
-                    if(canvasData[i][j] != 0){
-                        this.drawBox(j, i, this.minoColor[canvasData[i][j] - 1]);
+                    if(this.canvasData[i][j] != 0){
+                        this.drawBox(j, i, this.minoColor[this.canvasData[i][j] - 1]);
                     }else{
                         this.clearBox(j, i);
                     }
@@ -146,7 +148,7 @@ class tetriMino {
         
         // functionの中ではthisを参照できない？？
         //相対位置 → 絶対位置に変換 & 移動できるかジャッジ
-        function setRelPos(minoPos, i){
+        function setRelPos(canvasData, minoPos, i){
             if(canvasData[minoPos[0][1] + boxRelPos[i-1][1]][minoPos[0][0] + boxRelPos[i-1][0]] == 0){
                 minoPos[i][0] = (minoPos[0][0] + boxRelPos[i-1][0]); 
                 minoPos[i][1] = (minoPos[0][1] + boxRelPos[i-1][1]);
@@ -160,7 +162,7 @@ class tetriMino {
         //基準ブロックからの相対位置を回転 & 相対　→　絶対変換
         for (var i = 1; i <= 3; i++){
             boxRelPos[i-1] = [-boxRelPos[i-1][1], boxRelPos[i-1][0]]; // 相対位置π/2回転
-            setRelPos(this.minoPos, i);
+            setRelPos(this.canvasData, this.minoPos, i);
         }
         
         //1ブロックでも回転不可のものがあれば元に戻す
