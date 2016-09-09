@@ -1,4 +1,6 @@
-﻿const canvasW = 300; //画面幅
+﻿//unko
+
+const canvasW = 300; //画面幅
 const canvasH = 600; //画面高
 const subCanvasW = 180;
 const subCanvasH = 300;
